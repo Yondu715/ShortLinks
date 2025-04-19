@@ -22,6 +22,6 @@ final class ShortLinkController extends Controller
             'slug' => $link->slug,
             'short_link' => url($link->slug),
             'expires_at' => $link->expires_at,
-        ]);
+        ], 201);
     }
 }
