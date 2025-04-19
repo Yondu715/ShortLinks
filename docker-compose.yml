@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  pgsql:
+    image: postgres:17
+    container_name: pgsql
+    env_file: ./.docker/.env.development
+    environment:
+      CUSTOM_DB: $CUSTOM_DB
+      CUSTOM_USER: $CUSTOM_USER
+      CUSTOM_PASS: $CUSTOM_PASS
+    volumes:
+      - ./.docker/pgsql/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./.docker/pgsql/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    ports:
+      - 5432:5432
+
+  app:
+    build:
+      context: ./.docker/app
+    container_name: app
+    env_file: ./.docker/.env.development
+    environment:
+        WEB_USER_ID: $WEB_USER_ID
+        WEB_USER_NAME: $WEB_USER_NAME
+        WEB_GROUP_ID: $WEB_GROUP_ID
+        WEB_GROUP_NAME: $WEB_GROUP_NAME
+    volumes:
+      - .:/var/www
+      - /home/web/www/shortLink/local/composer:/composer
+    depends_on:
+      - pgsql
+    tty: true
+
+  nginx:
+    build:
+      context: ./.docker/nginx/
+    container_name: nginx
+    env_file: ./.docker/.env.development
+    environment:
+        WEB_USER_ID: $WEB_USER_ID
+        WEB_USER_NAME: $WEB_USER_NAME
+        WEB_GROUP_ID: $WEB_GROUP_ID
+        WEB_GROUP_NAME: $WEB_GROUP_NAME
+        NGINX_FASTCGI_PASS: app:9000
+        NGINX_WEB_DOMAIN: shortLink.ru
+    depends_on:
+      - app
+    volumes:
+      - .:/var/www
+    ports:
+      - 80:80
