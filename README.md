@@ -71,3 +71,4 @@ Content-Type: application/json
 > |---------------|-----------------------------------|--------------------------------------------------------------------------------------------------------------|
 > | `201`         | `application/json`                | `{"slug": "dfsjewq", "short_link": "http://localhost/zZEwca8Q", "expires_at": "2025-04-20T20:25:15.000000Z"}`|
 > | `422`         | `application/json`                | `{"message": "The url field must be a valid URL. (and 1 more error)","errors": ...`                          |
+> | `401`         | `application/json`                | `{"message": "Invalid token"}`                                                                               |
