@@ -55,7 +55,9 @@ php artisan migrate
 ## API
 #### Запрос
 POST /v1/short-links
+
 Authorization: Bearer abc123xyz
+
 Content-Type: application/json
 
 #### Параметры
